@@ -15,12 +15,29 @@ function calculateTotalWeight(data) {
   return totals;
 }
 
+function calculateTotalDistance(data) {
+  const totals = [];
+  data.forEach((workout) => {
+    const totalDistance = workout.exercises.reduce((total, { type, distance }) => {
+      if (type === 'cardio') {
+        return total + distance;
+      }
+      return total
+    }, 0)
+    totals.push(totalDistance);
+  })
+
+  return totals;
+}
+
 function populateChart(data) {
   const durations = data.map(({ totalDuration }) => totalDuration);
   const pounds = calculateTotalWeight(data);
+  const distance = calculateTotalDistance(data);
 
   const line = document.querySelector('#canvas').getContext('2d');
   const bar = document.querySelector('#canvas2').getContext('2d');
+  
 
   const labels = data.map(({ day }) => {
     const date = new Date(day);
@@ -43,6 +60,13 @@ function populateChart(data) {
           backgroundColor: 'red',
           borderColor: 'red',
           data: durations,
+          fill: false,
+        },
+        {
+          label: 'Total distance during workouts',
+          backgroundColor: 'blue',
+          borderColor: 'blue',
+          data: distance,
           fill: false,
         },
       ],

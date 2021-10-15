@@ -1,6 +1,6 @@
 async function initWorkout() {
   const lastWorkout = await API.getLastWorkout();
-  console.log("Last workout:", lastWorkout);
+
   if (lastWorkout) {
     document
       .querySelector("a[href='/exercise?']")
@@ -20,19 +20,20 @@ async function initWorkout() {
 }
 
 function tallyExercises(exercises) {
-  const tallied = exercises.reduce((acc, curr) => {
-    if (curr.type === "resistance") {
-      acc.totalWeight = (acc.totalWeight || 0) + curr.weight;
-      acc.totalSets = (acc.totalSets || 0) + curr.sets;
-      acc.totalReps = (acc.totalReps || 0) + curr.reps;
-    } else if (curr.type === "cardio") {
-      acc.totalDistance = (acc.totalDistance || 0) + curr.distance;
+  const tallied = exercises.reduce((accumulator, currentValue) => {
+    if (currentValue.type === "resistance") {
+      accumulator.totalWeight = (accumulator.totalWeight || 0) + currentValue.weight;
+      accumulator.totalSets = (accumulator.totalSets || 0) + currentValue.sets;
+      accumulator.totalReps = (accumulator.totalReps || 0) + currentValue.reps;
+    } else if (currentValue.type === "cardio") {
+      accumulator.totalDistance = (accumulator.totalDistance || 0) + currentValue.distance;
     }
-    return acc;
+    return accumulator;
   }, {});
   return tallied;
 }
 
+// Converts the time format from Unix time to mm/dd/yyyy format
 function formatDate(date) {
   const options = {
     weekday: "long",
@@ -44,6 +45,7 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString(options);
 }
 
+// Renders the workout summary workout stats container returned from the database
 function renderWorkoutSummary(summary) {
   const container = document.querySelector(".workout-stats");
 
@@ -60,6 +62,7 @@ function renderWorkoutSummary(summary) {
   Object.keys(summary).forEach(key => {
     const p = document.createElement("p");
     const strong = document.createElement("strong");
+
 
     strong.textContent = workoutKeyMap[key];
     const textNode = document.createTextNode(`: ${summary[key]}`);
