@@ -116,7 +116,7 @@ async function handleFormSubmit(event) {
 
   await API.addExercise(workoutData);
   clearInputs();
-  validateInputs() 
+  validateInputs();
   toast.classList.add("success");
 }
 
